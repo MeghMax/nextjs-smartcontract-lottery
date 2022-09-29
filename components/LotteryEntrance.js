@@ -6,18 +6,18 @@ import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
 
 export default function LotteryEntrance() {
-    const { Moralis, isWeb3Enabled, chainId: chainIdHex } = useMoralis()
+    const { isWeb3Enabled, chainId: chainIdHex } = useMoralis()
     // These get re-rendered every time due to our connect button!
     const chainId = parseInt(chainIdHex)
     // console.log(`ChainId is ${chainId}`)
     const raffleAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
-
+    const dispatch = useNotification()
     // State hooks
     // https://stackoverflow.com/questions/58252454/react-hooks-using-usestate-vs-just-variables
     const [entranceFee, setEntranceFee] = useState("0")
     const [numberOfPlayers, setNumberOfPlayers] = useState("0")
     const [recentWinner, setRecentWinner] = useState("0")
-
+  
     const {
         runContractFunction: enterRaffle,
         data: enterTxResponse,
@@ -87,8 +87,8 @@ export default function LotteryEntrance() {
     //     ],
     // }
 
-    const handleNewNotification = () => {
-        const dispatch = useNotification()
+    const HandleNewNotification = () => {
+        
         dispatch({
             type: "info",
             message: "Transaction Complete!",
@@ -102,7 +102,7 @@ export default function LotteryEntrance() {
         try {
             await tx.wait(1)
             updateUIValues()
-            handleNewNotification(tx)
+            HandleNewNotification(tx)
         } catch (error) {
             console.log(error)
         }
